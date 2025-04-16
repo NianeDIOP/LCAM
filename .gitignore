@@ -1,0 +1,22 @@
+# Fichiers Python
+__pycache__/
+*.pyc
+
+# Données et sauvegardes locales
+src/data/
+!src/data/lcams.db
+
+# Fichiers temporaires/backup
+*.bak
+*.tmp
+*.log
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Dossiers de sauvegarde
+src/data/backups/
+
+# Fichiers d'environnement
+.env
