@@ -46,12 +46,14 @@ def plot_repartition_par_sexe(df, column="Moy", title="Répartition par sexe"):
     Returns:
         fig: Figure Plotly
     """
-    if 'Sexe' not in df.columns:
+    # Support both lowercase and proper case column
+    df_copy = df.copy()
+    if 'sexe' in df_copy.columns:
+        df_copy.rename(columns={'sexe': 'Sexe'}, inplace=True)
+    if 'Sexe' not in df_copy.columns:
         st.warning("La colonne 'Sexe' n'est pas disponible dans les données.")
         return None
-    
     # Remplacer les valeurs de sexe pour plus de clarté
-    df_copy = df.copy()
     df_copy['Sexe'] = df_copy['Sexe'].replace({'M': 'Garçons', 'F': 'Filles'})
     
     fig = px.box(

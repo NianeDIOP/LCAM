@@ -458,3 +458,13 @@ def synchroniser_suppression_niveau(niveau, semestre):
         with pd.ExcelWriter(FICHIER_CENTRAL, engine='xlsxwriter') as writer:
             df_moy.to_excel(writer, sheet_name="Moyennes eleves", index=False)
             df_det.to_excel(writer, sheet_name="Données détaillées", index=False)
+
+def synchroniser_suppression_import(df_moyennes, niveau, classe, semestre):
+    """
+    Supprime dans la base et le fichier centralisé toutes les lignes correspondant aux IEN du DataFrame importé
+    """
+    from .excel_utils import synchroniser_suppression_eleve
+    # Pour chaque IEN du DataFrame
+    for ien in df_moyennes.get('IEN', []):
+        if pd.notna(ien) and ien != '':
+            synchroniser_suppression_eleve(ien, niveau, classe, semestre)

@@ -18,34 +18,63 @@ st.set_page_config(
     page_title=APP_NAME,
     page_icon="📊",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
+)
+
+# Hide the default Streamlit sidebar
+st.markdown(
+    """
+    <style>
+    [data-testid="stSidebar"] {display: none;}
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+    a:visited {
+        color: inherit;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
 )
 
 def main():
     # Initialiser la base de données
     init_database()
     
+    # Récupérer le paramètre de menu de l'URL (si présent)
+    menu = st.query_params.get("menu", "Accueil")
+    
+    # Barre latérale cachée par défaut sur la page d'accueil
+    if menu == "Accueil":
+        show_home_view()
+        return
+    
     # Barre latérale avec navigation
     st.sidebar.title(f"{APP_NAME}")
     st.sidebar.caption(f"Version {APP_VERSION}")
     
     # Menu de navigation
-    menu = st.sidebar.radio(
+    selected_menu = st.sidebar.radio(
         "Navigation",
         ["Accueil", "Module Semestre 1", "Module Semestre 2", "Module Général", "Paramètres"],
-        captions=["Page principale", "Données du 1er semestre", "Données du 2ème semestre", "Analyses annuelles", "Configuration"]
+        captions=["Page principale", "Données du 1er semestre", "Données du 2ème semestre", "Analyses annuelles", "Configuration"],
+        index=["Accueil", "Module Semestre 1", "Module Semestre 2", "Module Général", "Paramètres"].index(menu)
     )
     
+    # Mettre à jour l'URL
+    st.query_params["menu"] = selected_menu
+    
     # Afficher la vue correspondante
-    if menu == "Accueil":
+    if selected_menu == "Accueil":
         show_home_view()
-    elif menu == "Module Semestre 1":
+    elif selected_menu == "Module Semestre 1":
         show_semestre1_view()
-    elif menu == "Module Semestre 2":
+    elif selected_menu == "Module Semestre 2":
         show_semestre2_view()
-    elif menu == "Module Général":
+    elif selected_menu == "Module Général":
         show_general_view()
-    elif menu == "Paramètres":
+    elif selected_menu == "Paramètres":
         show_parametres_view()
     
     # Pied de page
